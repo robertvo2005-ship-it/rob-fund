@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RoB Fund · Danh mục cá nhân</title>
+<title>RoB Fund · Danh mục cá nhân (BẢN DEMO)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
   :root{color-scheme:light;
@@ -93,7 +93,7 @@
 <div class="wrap">
   <header>
     <div>
-      <h1>RoB <span>Fund</span> · Danh mục cá nhân</h1>
+      <h1>RoB <span>Fund</span> · Danh mục cá nhân <span style="display:inline-block;background:#e11d48;color:#fff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;vertical-align:middle;margin-left:6px;letter-spacing:.3px">BẢN DEMO</span></h1>
       <div class="macro" id="macro"></div>
     </div>
     <div style="text-align:right">
@@ -1771,12 +1771,18 @@ async function confirmAdd(){
   $("addform").classList.add("hide");$("vnsearch").value="";$("suggest").innerHTML="";renderDash();
 }
 function removeAndRender(sym){if(confirm("Xóa "+sym+" khỏi danh mục?")){removePosition(sym);renderDash();}}
+async function autoLoadBCTC(){try{let n=0;try{n=await idbCount('funda');}catch(_){}if(n>0)return;const r=await fetch('bctc.json',{cache:'no-store'});if(!r||!r.ok)return;const j=await r.json();const data=j.data||j;const ts=j.updatedAt||Date.now();let ok=0;for(const sym in data){const d=data[sym];if(!d||typeof d!=='object')continue;try{await idbPut('funda',Object.assign({},d,{sym,fetchedAt:ts,deep:true}));ok++;}catch(_){}}if(ok&&typeof renderFundaStatus==='function')renderFundaStatus();if(ok&&typeof curValSym!=='undefined'&&curValSym)renderValuation(curValSym);}catch(e){}}
+function firstRunLand(){let fresh=false;try{fresh=!localStorage.getItem(FIC_SET_KEY);}catch(e){}
+  if(fresh){showDecision();const dp=document.getElementById('decProg');if(dp)dp.innerHTML='🔶 <b>BẢN DEMO</b> — dùng dữ liệu mẫu để minh hoạ, CHƯA phải bản chính thức.<br><b>👋 Chào cô!</b> Công cụ đã <b>cấu hình sẵn</b> (vốn mẫu 500 triệu · khẩu vị cân bằng) — cô KHÔNG cần nhập gì. Chỉ cần bấm nút <b>▶ Chạy toàn bộ &amp; ra quyết định</b> ngay bên trên (tải dữ liệu ~1–2 phút) để xem hệ thống chọn cổ phiếu. Muốn đổi vốn/khẩu vị thì vào ⚙️ IPS · Cài đặt.';}
+  else showDash();}
 
 loadSettings();
 FIC.positions=[];   // danh mục cá nhân bắt đầu rỗng — tự thêm mã thật qua ô tìm kiếm
 loadUserPositions();
+if(!(FIC.navBase>0))FIC.navBase=500000000;
 loadCash();ensureCash();
-showDash();
+autoLoadBCTC();
+firstRunLand();
 initSearch();
 document.addEventListener("click",e=>{const nv=document.querySelector(".nav");if(nv&&!nv.contains(e.target))closeMenu();});
 setInterval(()=>{const vis=id=>!document.getElementById(id).classList.contains("hide");if(vis("view-dash"))renderDash();else if(vis("view-risk"))renderRisk();else if(vis("view-val")&&curValSym)renderValuation(curValSym);},30000);
