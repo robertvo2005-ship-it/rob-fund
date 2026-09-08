@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RoB Fund · Danh mục cá nhân (BẢN DEMO)</title>
+<title>RoB Fund · Danh mục (BẢN DEMO)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
   :root{color-scheme:light;
@@ -1771,22 +1771,30 @@ async function confirmAdd(){
   $("addform").classList.add("hide");$("vnsearch").value="";$("suggest").innerHTML="";renderDash();
 }
 function removeAndRender(sym){if(confirm("Xóa "+sym+" khỏi danh mục?")){removePosition(sym);renderDash();}}
-async function autoLoadBCTC(){try{let n=0;try{n=await idbCount('funda');}catch(_){}if(n>0)return;const r=await fetch('bctc.json',{cache:'no-store'});if(!r||!r.ok)return;const j=await r.json();const data=j.data||j;const ts=j.updatedAt||Date.now();let ok=0;for(const sym in data){const d=data[sym];if(!d||typeof d!=='object')continue;try{await idbPut('funda',Object.assign({},d,{sym,fetchedAt:ts,deep:true}));ok++;}catch(_){}}if(ok&&typeof renderFundaStatus==='function')renderFundaStatus();if(ok&&typeof curValSym!=='undefined'&&curValSym)renderValuation(curValSym);}catch(e){}}
-function firstRunLand(){let fresh=false;try{fresh=!localStorage.getItem(FIC_SET_KEY);}catch(e){}
-  if(fresh){showDecision();const dp=document.getElementById('decProg');if(dp)dp.innerHTML='🔶 <b>BẢN DEMO</b> — dùng dữ liệu mẫu để minh hoạ, CHƯA phải bản chính thức.<br><b>👋 Chào cô!</b> Công cụ đã <b>cấu hình sẵn</b> (vốn mẫu 500 triệu · khẩu vị cân bằng) — cô KHÔNG cần nhập gì. Chỉ cần bấm nút <b>▶ Chạy toàn bộ &amp; ra quyết định</b> ngay bên trên (tải dữ liệu ~1–2 phút) để xem hệ thống chọn cổ phiếu. Muốn đổi vốn/khẩu vị thì vào ⚙️ IPS · Cài đặt.';}
-  else showDash();}
 
 loadSettings();
 FIC.positions=[];   // danh mục cá nhân bắt đầu rỗng — tự thêm mã thật qua ô tìm kiếm
 loadUserPositions();
-if(!(FIC.navBase>0))FIC.navBase=500000000;
 loadCash();ensureCash();
-autoLoadBCTC();
-firstRunLand();
+showDash();
 initSearch();
 document.addEventListener("click",e=>{const nv=document.querySelector(".nav");if(nv&&!nv.contains(e.target))closeMenu();});
 setInterval(()=>{const vis=id=>!document.getElementById(id).classList.contains("hide");if(vis("view-dash"))renderDash();else if(vis("view-risk"))renderRisk();else if(vis("view-val")&&curValSym)renderValuation(curValSym);},30000);
 setInterval(()=>{if(!document.getElementById("view-news").classList.contains("hide"))renderNews(true);},300000);
+</script>
+<script>
+(function(){try{
+  if(localStorage.getItem('fic_settings'))return; // khách quay lại: giữ trạng thái của họ
+  FIC.navBase=500000000; FIC.cash=280130000;
+  FIC.positions=[{"sym": "VIC", "name": "Vingroup", "sector": "Bất động sản", "status": "holding", "shares": 200, "avgCost": 249600, "entry": 249600, "stop": 229632, "target": 309504, "rr": "1:3", "seedPrice": 249600, "seedPrev": 249600, "userAdded": true, "horizon": "medium", "thesis": "[DEMO] Chọn & phân bổ tự động theo GA (dữ liệu mẫu)."}, {"sym": "MSB", "name": "MSB", "sector": "Ngân hàng", "status": "holding", "shares": 5500, "avgCost": 13100, "entry": 13100, "stop": 12052, "target": 16244, "rr": "1:3", "seedPrice": 13100, "seedPrev": 13100, "userAdded": true, "horizon": "medium", "thesis": "[DEMO] Chọn & phân bổ tự động theo GA (dữ liệu mẫu)."}, {"sym": "LPB", "name": "LPBank", "sector": "Ngân hàng", "status": "holding", "shares": 1400, "avgCost": 49000, "entry": 49000, "stop": 45080, "target": 60760, "rr": "1:3", "seedPrice": 49000, "seedPrev": 49000, "userAdded": true, "horizon": "medium", "thesis": "[DEMO] Chọn & phân bổ tự động theo GA (dữ liệu mẫu)."}, {"sym": "VPI", "name": "Văn Phú Invest", "sector": "Bất động sản", "status": "holding", "shares": 500, "avgCost": 58600, "entry": 58600, "stop": 53912, "target": 72664, "rr": "1:3", "seedPrice": 58600, "seedPrev": 58600, "userAdded": true, "horizon": "medium", "thesis": "[DEMO] Chọn & phân bổ tự động theo GA (dữ liệu mẫu)."}];
+  window.__decision={"rec": [{"sym": "VIC", "sector": "Bất động sản", "price": 249600, "shares": 200, "actual": 49920000, "weight": 0.1454, "vol": 0.3, "beta": 1, "z": {"trend200": 2.99, "lowvol": -1.18, "mom": 2.95}, "rank": null, "total": 103, "adtv": 1407393011525, "fillPct": 0.0, "stop": 229632, "target": 309504, "bctc": {"roe": 0.13028221093677053, "roeReal": true, "pe": 92.65304318972757, "pb": 11.540706231317907, "foreignOwn": 0.032038956400651006, "de": 5.831, "piotroski": 7, "piotroskiMax": 8, "netMargin": 0.1173, "revYoY": 0.6584, "deep": true, "verdict": "Cảnh báo", "cls": "down", "notes": ["P/E cao", "P/B cao", "Nợ/VCSH cao"]}}, {"sym": "MSB", "sector": "Ngân hàng", "price": 13100, "shares": 5500, "actual": 72050000, "weight": 0.1454, "vol": 0.3, "beta": 1, "z": {"trend200": 2.4, "lowvol": 0.376, "mom": 2.61}, "rank": null, "total": 103, "adtv": 73704124440, "fillPct": 0.1, "stop": 12052, "target": 16244, "bctc": {"roe": 0.1392238811998469, "roeReal": true, "pe": 8.35848788812431, "pb": 1.0881193066187713, "foreignOwn": 0.06104506143162393, "de": 8.747, "piotroski": null, "piotroskiMax": 8, "netMargin": null, "revYoY": null, "deep": true, "verdict": "Trung bình", "cls": "flat", "notes": []}}, {"sym": "LPB", "sector": "Ngân hàng", "price": 49000, "shares": 1400, "actual": 68600000, "weight": 0.1454, "vol": 0.3, "beta": 1, "z": {"trend200": 2.2, "lowvol": -0.76, "mom": 2.87}, "rank": null, "total": 103, "adtv": 149213451920, "fillPct": 0.05, "stop": 45080, "target": 60760, "bctc": {"roe": 0.25222544697833, "roeReal": true, "pe": 12.962356095286632, "pb": 3.4017008292331194, "foreignOwn": 0.014807920885677318, "de": 13.304, "piotroski": null, "piotroskiMax": 8, "netMargin": null, "revYoY": null, "deep": true, "verdict": "Khỏe", "cls": "up", "notes": []}}, {"sym": "VPI", "sector": "Bất động sản", "price": 58600, "shares": 500, "actual": 29300000, "weight": 0.0638, "vol": 0.3, "beta": 1, "z": {"trend200": 1.52, "lowvol": 0.688, "mom": 1.89}, "rank": null, "total": 103, "adtv": 138057257825, "fillPct": 0.02, "stop": 53912, "target": 72664, "bctc": {"roe": 0.07364847203473072, "roeReal": true, "pe": 54.76540237033463, "pb": 4.078885120267553, "foreignOwn": 0.10439420452663183, "de": 1.76, "piotroski": 5, "piotroskiMax": 8, "netMargin": 0.2259, "revYoY": 0.3177, "deep": true, "verdict": "Cảnh báo", "cls": "down", "notes": ["ROE thấp", "P/E cao", "P/B cao"]}}], "reg": {"label": "Đi ngang / phân hóa", "color": "#64748b", "detail": "VN-Index trên MA200 · MA50 < MA200 · σ20 ≈ 17%/năm (thấp)", "stance": "Phần lớn thời gian ĐỨNG NGOÀI — chỉ đánh setup thật rõ, hạ kỳ vọng lợi nhuận.", "vol": 0.17}, "stance": "THẬN TRỌNG — đi ngang", "convict": "Trung bình-thấp", "cashT": 0.5, "NAV": 500000000, "invested": 219870000, "horizon": "medium", "hzKey": "mid", "hzTilt": "cân bằng factor", "hzReb": "hàng THÁNG", "scheme": "ga", "maxW": 0.32, "orders": {"buy": [{"sym": "VIC", "sector": "Bất động sản", "price": 249600, "tgtShares": 200, "curShares": 0, "deltaShares": 200, "weight": 0.1454}, {"sym": "MSB", "sector": "Ngân hàng", "price": 13100, "tgtShares": 5500, "curShares": 0, "deltaShares": 5500, "weight": 0.1454}, {"sym": "LPB", "sector": "Ngân hàng", "price": 49000, "tgtShares": 1400, "curShares": 0, "deltaShares": 1400, "weight": 0.1454}, {"sym": "VPI", "sector": "Bất động sản", "price": 58600, "tgtShares": 500, "curShares": 0, "deltaShares": 500, "weight": 0.0638}], "adjust": [], "sell": []}, "heldReview": [], "nPos": 4};
+  try{fetch('bctc.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(!j)return;var d=j.data||j,ts=j.updatedAt||Date.now();for(var s in d){try{idbPut('funda',Object.assign({},d[s],{sym:s,fetchedAt:ts,deep:true}));}catch(e){}}}).catch(function(){});}catch(e){}
+  var ds=document.getElementById('decScheme'); if(ds){ds.value='ga';} window.__decSchemeTouched=true;
+  if(typeof showDecision==='function')showDecision();
+  if(typeof renderDecision==='function')renderDecision();
+  if(typeof stepState==='function')stepState(5);
+  var dp=document.getElementById('decProg'); if(dp) dp.innerHTML='🔶 <b>BẢN DEMO</b> — danh mục đã được <b>GA chia sẵn</b> (dữ liệu mẫu · vốn 500tr · trung hạn). Regime "đi ngang" nên GA để ~50% tiền mặt, chọn 4 mã. Bảng dưới là kết quả GA phân bổ; sang tab <b>📊 Danh mục đang nắm</b> để xem danh mục + biểu đồ. Muốn chạy lại: bấm ▶ Chạy toàn bộ.';
+}catch(e){}})();
 </script>
 </body>
 </html>
